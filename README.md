@@ -1,7 +1,5 @@
 # TransportPass - Public Transport Pass Management System
 
-*Made by Nirjhar Mishra*
-
 A comprehensive web-based platform for managing public transport passes across buses, trains, and flights. Users can browse, purchase, and manage transport passes through an integrated wallet system.
 
 ## 🚀 Features
@@ -94,3 +92,5 @@ ISC
 ---
 
 **Note:** Run `npm run init-db` before starting the server for the first time to initialize the database.
+
+*Made by Nirjhar Mishra*
