@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - TransportPass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-ticket-alt"></i>
+                <span>TransportPass Admin</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" id="homeNav">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="admin.html" class="active">Admin</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="admin-title">Admin Panel</h1>
+
+        <!-- Admin Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" data-tab="passes">Manage Passes</button>
+            <button class="tab-btn" data-tab="bookings">Bookings</button>
+            <button class="tab-btn" data-tab="users">Users</button>
+            <button class="tab-btn" data-tab="transactions">All Transactions</button>
+            <button class="tab-btn" data-tab="statistics">Statistics</button>
+        </div>
+
+        <!-- Manage Passes -->
+        <section id="passesTab" class="tab-content active">
+            <div class="admin-header">
+                <h3>Pass Management</h3>
+                <button class="btn btn-primary" onclick="openAddPassModal()">
+                    <i class="fas fa-plus"></i> Add New Pass
+                </button>
+            </div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Provider</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Validity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminPassesBody">
+                        <!-- Passes will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bookings -->
+        <section id="bookingsTab" class="tab-content">
+            <h3>All Bookings (Purchased Passes)</h3>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Provider</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Purchase Date</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminBookingsBody">
+                        <!-- Bookings will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Users -->
+        <section id="usersTab" class="tab-content">
+            <h3>User Management</h3>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Wallet Balance</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUsersBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- All Transactions -->
+        <section id="transactionsTab" class="tab-content">
+            <h3>All Transactions</h3>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTransactionsBody">
+                        <!-- Transactions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section id="statisticsTab" class="tab-content">
+            <h3>Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h4>Total Users</h4>
+                    <p id="statUsers">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-ticket-alt"></i>
+                    <h4>Total Passes</h4>
+                    <p id="statPasses">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-rupee-sign"></i>
+                    <h4>Total Revenue</h4>
+                    <p id="statRevenue">₹0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h4>Total Bookings</h4>
+                    <p id="statBookings">0</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Add/Edit Pass Modal -->
+    <div id="addPassModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddPassModal()">&times;</span>
+            <h2 id="modalTitle">Add New Pass</h2>
+            <form id="passForm" class="admin-form">
+                <div class="form-group">
+                    <label>Provider</label>
+                    <input type="text" id="passProvider" required placeholder="e.g., RedBus">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="passCategory" required>
+                        <option value="bus">Bus</option>
+                        <option value="train">Train</option>
+                        <option value="flight">Flight</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="passType" required>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="student">Student</option>
+                        <option value="corporate">Corporate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" id="passPrice" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Validity (days)</label>
+                    <input type="number" id="passValidity" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Coverage</label>
+                    <textarea id="passCoverage" required placeholder="e.g., All routes, Unlimited rides"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Logo URL</label>
+                    <input type="url" id="passLogo" placeholder="https://example.com/logo.png">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Pass</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
+

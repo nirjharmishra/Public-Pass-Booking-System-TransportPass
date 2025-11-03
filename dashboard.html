@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TransportPass</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-ticket-alt"></i>
+                <span>TransportPass</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" id="homeNav">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="admin.html" id="adminNav" style="display: none;">Admin</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Wallet Section -->
+        <section class="dashboard-section">
+            <div class="wallet-card">
+                <div class="wallet-header">
+                    <div>
+                        <h2><i class="fas fa-wallet"></i> Wallet Balance</h2>
+                        <p id="walletBalance" class="wallet-amount">₹0</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openWalletModal()">
+                        <i class="fas fa-plus"></i> Top Up
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" data-tab="available">Available Passes</button>
+            <button class="tab-btn" data-tab="active">Active Passes</button>
+            <button class="tab-btn" data-tab="expired">Expired Passes</button>
+            <button class="tab-btn" data-tab="transactions">Transactions</button>
+        </div>
+
+        <!-- Available Passes -->
+        <section id="availableTab" class="tab-content active">
+            <h3 class="section-subtitle">Available Passes</h3>
+            <!-- Filter Panel -->
+            <div class="filter-panel-compact">
+                <div class="filter-compact-header">
+                    <div class="category-buttons">
+                        <button class="category-btn active" data-category="all" onclick="filterByCategory('all')">
+                            <i class="fas fa-th"></i> All
+                        </button>
+                        <button class="category-btn" data-category="bus" onclick="filterByCategory('bus')">
+                            <i class="fas fa-bus"></i> Buses
+                        </button>
+                        <button class="category-btn" data-category="train" onclick="filterByCategory('train')">
+                            <i class="fas fa-train"></i> Trains
+                        </button>
+                        <button class="category-btn" data-category="flight" onclick="filterByCategory('flight')">
+                            <i class="fas fa-plane"></i> Flights
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-compact-body">
+                    <div class="filter-compact-row">
+                        <select id="dashboardPassTypeFilter" class="filter-control-compact">
+                            <option value="all">All Types</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="student">Student</option>
+                            <option value="corporate">Corporate</option>
+                        </select>
+                        <div class="search-input-wrapper-compact">
+                            <input type="text" id="dashboardSearchFilter" class="filter-control-compact search-input-compact" placeholder="Search passes...">
+                            <i class="fas fa-search search-icon-compact"></i>
+                        </div>
+                        <button class="btn btn-primary btn-search-compact" onclick="searchAvailablePasses()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-secondary btn-reset-compact" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="passes-grid" id="availablePassesGrid">
+                <!-- Available passes will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Active Passes -->
+        <section id="activeTab" class="tab-content">
+            <h3 class="section-subtitle">Active Passes</h3>
+            <div class="passes-list" id="activePassesList">
+                <!-- Active passes will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Expired Passes -->
+        <section id="expiredTab" class="tab-content">
+            <h3 class="section-subtitle">Expired Passes</h3>
+            <div class="passes-list" id="expiredPassesList">
+                <!-- Expired passes will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Transactions -->
+        <section id="transactionsTab" class="tab-content">
+            <h3 class="section-subtitle">Transaction History</h3>
+            <div class="transactions-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsBody">
+                        <!-- Transactions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Wallet Top-Up Modal -->
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWalletModal()">&times;</span>
+            <h2><i class="fas fa-wallet"></i> Top Up Wallet</h2>
+            <div class="topup-options">
+                <button class="topup-btn" data-amount="299" onclick="selectTopUp(299)">₹299</button>
+                <button class="topup-btn" data-amount="599" onclick="selectTopUp(599)">₹599</button>
+                <button class="topup-btn" data-amount="999" onclick="selectTopUp(999)">₹999</button>
+                <button class="topup-btn" data-amount="2999" onclick="selectTopUp(2999)">₹2,999</button>
+            </div>
+            <div class="custom-amount">
+                <label for="customAmount">Custom Amount:</label>
+                <input type="number" id="customAmount" placeholder="Enter amount" min="100">
+            </div>
+            <div class="selected-amount">
+                <p>Selected Amount: <span id="selectedAmount">₹0</span></p>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="processTopUp()">OK - Add Balance</button>
+        </div>
+    </div>
+
+    <!-- Pass Details Modal -->
+    <div id="passDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePassDetailsModal()">&times;</span>
+            <div id="passDetailsContent">
+                <!-- Pass details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Success Loader -->
+    <div id="bookingLoader" class="booking-loader">
+        <div class="loader-content">
+            <div class="loader-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Booking Confirmed!</h2>
+            <p>Your pass has been purchased successfully</p>
+            <div class="loader-spinner">
+                <div class="spinner"></div>
+            </div>
+            <p class="loader-message">Redirecting to Active Passes...</p>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div id="bookingConfirmationModal" class="modal">
+        <div class="modal-content booking-confirmation-modal">
+            <span class="close" onclick="closeBookingConfirmationModal()">&times;</span>
+            <div class="booking-confirmation-header">
+                <div class="confirmation-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <h2>Confirm Your Booking</h2>
+                <p class="confirmation-subtitle">Please review your booking details before confirming</p>
+            </div>
+            
+            <div class="booking-details">
+                <div class="booking-detail-section">
+                    <h3><i class="fas fa-user"></i> Passenger Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Name:</label>
+                            <span id="bookingUserName">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email:</label>
+                            <span id="bookingUserEmail">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-detail-section">
+                    <h3><i class="fas fa-info-circle"></i> Pass Details</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Provider:</label>
+                            <span id="bookingPassProvider">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Category:</label>
+                            <span id="bookingPassCategory">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Type:</label>
+                            <span id="bookingPassType">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Coverage:</label>
+                            <span id="bookingPassCoverage">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Validity:</label>
+                            <span id="bookingPassValidity">-</span>
+                        </div>
+                        <div class="detail-item highlight">
+                            <label>Price:</label>
+                            <span id="bookingPassPrice">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-detail-section important">
+                    <h3><i class="fas fa-calendar-check"></i> Expiry Information</h3>
+                    <div class="expiry-info">
+                        <div class="expiry-date-display">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <label>Pass Expires On:</label>
+                                <span id="bookingExpiryDate" class="expiry-date">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-terms-section">
+                    <div class="terms-header">
+                        <i class="fas fa-file-contract"></i>
+                        <h3>Terms & Conditions</h3>
+                    </div>
+                    <div class="terms-content">
+                        <ul class="terms-list">
+                            <li><i class="fas fa-times-circle"></i> Once booked, the pass cannot be cancelled or refunded.</li>
+                            <li><i class="fas fa-clock"></i> The pass is valid from the purchase date until the expiry date shown above.</li>
+                            <li><i class="fas fa-wallet"></i> Payment will be deducted from your wallet balance immediately upon confirmation.</li>
+                            <li><i class="fas fa-user-check"></i> This pass is non-transferable and can only be used by the account holder.</li>
+                            <li><i class="fas fa-info-circle"></i> Please ensure you have sufficient wallet balance before confirming the booking.</li>
+                        </ul>
+                        <div class="terms-agreement">
+                            <label class="terms-checkbox-label">
+                                <input type="checkbox" id="termsAgreement" required>
+                                <span>I agree to the Terms & Conditions stated above</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-actions">
+                <button class="btn btn-secondary btn-cancel" onclick="closeBookingConfirmationModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-primary btn-confirm" onclick="confirmBookingPurchase()">
+                    <i class="fas fa-check"></i> Confirm Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+    <script src="js/passes.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
+

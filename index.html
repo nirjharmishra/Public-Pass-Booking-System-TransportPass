@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransportPass - Your Travel Companion</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-ticket-alt"></i>
+                <span>TransportPass</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active" id="homeNav">Home</a></li>
+                <li><a href="login.html" id="loginNav">Login</a></li>
+                <li><a href="register.html" id="registerNav">Register</a></li>
+                <li><a href="dashboard.html" id="dashboardNav" style="display: none;">Dashboard</a></li>
+                <li><a href="admin.html" id="adminNav" style="display: none;">Admin</a></li>
+                <li><a href="#" id="logoutNav" style="display: none;" onclick="logout()">Logout</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Journey, One Pass Away</h1>
+            <p>Manage all your transport passes in one place - Buses, Trains, Flights</p>
+            <div class="hero-buttons">
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+                <a href="#passes" class="btn btn-secondary">View Discount Passes</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured/Discount Passes Section (Visible to all) -->
+    <section id="passes" class="pass-categories">
+        <div class="container">
+            <h2 class="section-title">🎯 Featured Discount Passes</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 2rem; font-size: 1.1rem;">
+                Discover our best deals and save on your daily commute
+            </p>
+            <!-- Pass Cards - Limited to 6 passes -->
+            <div class="passes-grid" id="passesGrid">
+                <!-- Featured passes will be dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <!-- All Passes Section (Visible only after login) -->
+    <section id="allPassesSection" class="pass-categories" style="display: none !important; background: var(--white);">
+        <div class="container">
+            <h2 class="section-title">🚀 Book All Passes</h2>
+            <p style="text-align: center; color: var(--gray); margin-bottom: 2rem; font-size: 1.1rem;">
+                Browse and book from our complete collection of transport passes
+            </p>
+            
+            <!-- Category Tabs for All Passes -->
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="all">All</button>
+                <button class="tab-btn" data-category="bus">Buses</button>
+                <button class="tab-btn" data-category="train">Trains</button>
+                <button class="tab-btn" data-category="flight">Flights</button>
+            </div>
+
+            <!-- Filters for All Passes -->
+            <div class="filters">
+                <select id="passTypeFilter" class="filter-select">
+                    <option value="all">All Types</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="student">Student</option>
+                    <option value="corporate">Corporate</option>
+                </select>
+                <input type="text" id="searchFilter" class="filter-input" placeholder="Search passes...">
+            </div>
+
+            <!-- All Pass Cards -->
+            <div class="passes-grid" id="allPassesGrid">
+                <!-- All passes will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose TransportPass?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure</h3>
+                    <p>Bank-level security for all your transactions</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Friendly</h3>
+                    <p>Access your passes anytime, anywhere</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Wallet System</h3>
+                    <p>Top-up once, use multiple times</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-receipt"></i>
+                    <h3>Digital Receipts</h3>
+                    <p>Download receipts for all your purchases</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TransportPass</h3>
+                    <p>Your trusted companion for all transport needs</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="register.html">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TransportPass. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login Required</h2>
+            <p>Please login to purchase passes</p>
+            <a href="login.html" class="btn btn-primary">Go to Login</a>
+        </div>
+    </div>
+
+    <!-- Pass Details Modal -->
+    <div id="passDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePassModal()">&times;</span>
+            <div id="passDetailsContent">
+                <!-- Pass details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/passes.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
